@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -54,8 +55,17 @@ public class PostService {
     }
 
 //    read all posts
-    public PostResponse getAllPosts(int pageNo , int pageSize ){
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public PostResponse getAllPosts(int pageNo , int pageSize , String sortBy , String sortDir ){
+
+        Sort sort = null;
+        if(sortDir.equalsIgnoreCase("asc")){
+            sort = Sort.by(sortBy).ascending();
+        }
+        else{
+            sort  = Sort.by(sortBy).descending();
+        }
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize , sort);
         Page<Post> pagePost = repo.findAll(pageable);
         List<Post> posts = pagePost.getContent();
 
@@ -106,5 +116,10 @@ public class PostService {
         return posts;
     }
 
+//    search a post
+    public List<Post> searchPost(String keyword){
+        List<Post> posts = repo.findByTitleContaining(keyword);
+        return posts;
+    }
 }
 

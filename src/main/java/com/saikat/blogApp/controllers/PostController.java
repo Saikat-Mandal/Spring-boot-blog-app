@@ -1,6 +1,7 @@
 package com.saikat.blogApp.controllers;
 
 
+import com.saikat.blogApp.config.AppConstants;
 import com.saikat.blogApp.models.Post;
 import com.saikat.blogApp.payloads.PostResponse;
 import com.saikat.blogApp.services.PostService;
@@ -35,10 +36,12 @@ public class PostController {
 //    get all posts
     @GetMapping("/post")
     public ResponseEntity<PostResponse> getAllPosts(
-            @RequestParam(value = "pageNumber" , defaultValue = "0" , required = false) int pageNumber,
-            @RequestParam(value = "pageSize" , defaultValue = "2" , required = false) int pageSize
+            @RequestParam(value = "pageNumber" , defaultValue = AppConstants.PAGE_NUMBER, required = false) int pageNumber,
+            @RequestParam(value = "pageSize" , defaultValue = AppConstants.PAGE_SIZE , required = false) int pageSize,
+            @RequestParam(value = "sortBy" , defaultValue = AppConstants.SORT_BY , required = false) String sortBy,
+            @RequestParam(value = "sortDir" , defaultValue = AppConstants.SORT_DIR , required = false) String sortDir
              ){
-        PostResponse postResponse =  service.getAllPosts(pageNumber , pageSize);
+        PostResponse postResponse =  service.getAllPosts(pageNumber , pageSize , sortBy , sortDir);
         return ResponseEntity.status(HttpStatus.OK).body(postResponse);
     }
 
@@ -75,5 +78,10 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
+//    search
+    @GetMapping("/post/search/{keyword}")
+    public ResponseEntity<List<Post>> searchPost(@PathVariable String keyword){
+            List<Post> posts = service.searchPost(keyword);
+            return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
 }
