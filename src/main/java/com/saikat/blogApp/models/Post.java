@@ -1,9 +1,10 @@
 package com.saikat.blogApp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -30,5 +31,9 @@ public class Post {
 
     @ManyToOne
     private User user;
+
+    @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
 
 }

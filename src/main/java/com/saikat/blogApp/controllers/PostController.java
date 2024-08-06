@@ -84,4 +84,8 @@ public class PostController {
             List<Post> posts = service.searchPost(keyword);
             return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
+
+//    upload image
+
 }
+
